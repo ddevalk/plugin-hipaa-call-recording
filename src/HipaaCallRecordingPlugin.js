@@ -1,7 +1,6 @@
 import React from 'react';
 import { VERSION } from '@twilio/flex-ui';
 import { FlexPlugin } from 'flex-plugin';
-import fetch from 'node-fetch';
 import reducers, { namespace } from './states';
 
 const PLUGIN_NAME = 'HipaaCallRecordingPlugin';

@@ -8,6 +8,7 @@
     "deploy": "twilio-run deploy"
   },
   "dependencies": {
+    "twilio": "^3.48.0",
     "twilio-flex-token-validator": "^1.5.3"
   },
   "devDependencies": {

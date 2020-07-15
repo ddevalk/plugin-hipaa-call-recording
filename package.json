@@ -20,14 +20,13 @@
   },
   "dependencies": {
     "craco-config-flex-plugin": "^3.13.2",
-    "fetch": "^1.1.0",
     "flex-plugin": "^3.13.2",
     "flex-plugin-scripts": "^3.13.2",
-    "node-fetch": "^2.6.0",
     "react": "16.5.2",
     "react-dom": "16.5.2",
     "react-emotion": "9.2.6",
-    "react-scripts": "3.4.1"
+    "react-scripts": "3.4.1",
+    "twilio": "^3.48.0"
   },
   "devDependencies": {
     "@twilio/flex-ui": "^1",
