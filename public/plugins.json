@@ -1,0 +1,13 @@
+[
+  {
+    "name": "plugin-hipaa-call-recording",
+    "version": "0.0.0",
+    "class": "HipaaCallRecordingPlugin",
+    "requires": [
+      {
+        "@twilio/flex-ui": "^1"
+      }
+    ],
+    "src": "http://localhost:3000/plugin-hipaa-call-recording.js"
+  }
+]
