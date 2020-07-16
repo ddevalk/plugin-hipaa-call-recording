@@ -19,21 +19,21 @@
     "test": "flex-plugin test --env=jsdom"
   },
   "dependencies": {
-    "craco-config-flex-plugin": "^3.13.2",
+    "craco-config-flex-plugin": "^3.13.5",
     "flex-plugin": "^3.13.2",
-    "flex-plugin-scripts": "^3.13.2",
+    "flex-plugin-scripts": "^3.13.5",
     "react": "16.5.2",
     "react-dom": "16.5.2",
-    "react-emotion": "9.2.6",
+    "react-emotion": "10.0.0",
     "react-scripts": "3.4.1",
     "twilio": "^3.48.0"
   },
   "devDependencies": {
     "@twilio/flex-ui": "^1",
     "babel-polyfill": "^6.26.0",
-    "enzyme": "^3.10.0",
-    "enzyme-adapter-react-16": "^1.14.0",
-    "rimraf": "^3.0.0"
+    "enzyme": "^3.11.0",
+    "enzyme-adapter-react-16": "^1.15.2",
+    "rimraf": "^3.0.2"
   },
   "browserslist": {
     "production": [

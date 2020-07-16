@@ -1,10 +1,8 @@
 import React from 'react';
-import { VERSION } from '@twilio/flex-ui';
 import { FlexPlugin } from 'flex-plugin';
-import reducers, { namespace } from './states';
 
 const PLUGIN_NAME = 'HipaaCallRecordingPlugin';
-const SERVERLESS_FUNCTION_DOMAIN = 'twilioserverless-6686-dev.twil.io';
+const SERVERLESS_FUNCTION_DOMAIN = 'default-4549-dev.twil.io';
 
 export default class HipaaCallRecordingPlugin extends FlexPlugin {
   constructor() {
@@ -19,8 +17,6 @@ export default class HipaaCallRecordingPlugin extends FlexPlugin {
    * @param manager { import('@twilio/flex-ui').Manager }
    */
   init(flex, manager) {
-    this.registerReducers(manager);
-
     flex.Actions.addListener('afterAcceptTask', payload => {
       const waitTimeMs = 100;
       const maxWaitTimeMs = 5000;
@@ -76,22 +72,5 @@ export default class HipaaCallRecordingPlugin extends FlexPlugin {
         clearInterval(waitForConferenceInterval);
       }, maxWaitTimeMs);
     });
-  }
-
-  /**
-   * Registers the plugin reducers
-   *
-   * @param manager { Flex.Manager }
-   */
-  registerReducers(manager) {
-    if (!manager.store.addReducer) {
-      // eslint: disable-next-line
-      console.error(
-        `You need FlexUI > 1.9.0 to use built-in redux; you are currently on ${VERSION}`
-      );
-      return;
-    }
-
-    manager.store.addReducer(namespace, reducers);
   }
 }
