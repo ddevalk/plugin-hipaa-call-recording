@@ -1,9 +1,9 @@
 import React from 'react';
 import { FlexPlugin } from 'flex-plugin';
-import Axios from 'axios';
+import PluginConfig from './config';
 
 const PLUGIN_NAME = 'HipaaCallRecordingPlugin';
-const SERVERLESS_FUNCTION_DOMAIN = 'twilioserverless-6038-dev.twil.io';
+const { runtimeDomain } = PluginConfig;
 
 export default class HipaaCallRecordingPlugin extends FlexPlugin {
   constructor() {
@@ -21,7 +21,7 @@ export default class HipaaCallRecordingPlugin extends FlexPlugin {
     // Send Task SID to Function after the Task is accepted.
     flex.Actions.addListener('afterAcceptTask', async payload => {
       const { task } = payload;
-      const url = 'https://local-node.ngrok.io/recording-service';
+      const url = `https://${runtimeDomain}/recording-service`;
       const body = {
         workspaceSid: task.sourceObject.workspaceSid,
         taskSid: task.taskSid,

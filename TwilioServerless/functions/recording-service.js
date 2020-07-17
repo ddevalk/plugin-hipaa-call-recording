@@ -17,8 +17,15 @@ exports.handler = TokenValidator(async function (context, event, callback) {
       .workspaces(event.workspaceSid)
       .tasks(event.taskSid)
       .fetch();
+
+    // Convert Task Attributes to JSON
     const taskAttributes = JSON.parse(task.attributes);
-    const callSid = taskAttributes.conference.participants.customer;
+
+    // Retrieve customer call SID
+    const callSid = taskAttributes.conference?.participants.customer;
+
+    // Throw error if no call SID
+    if (!callSid) throw new Error('Unable to retrieve call SID.');
 
     // Check to see if this call is already being recorded
     const isRecording = await client.recordings.list({
@@ -31,19 +38,27 @@ exports.handler = TokenValidator(async function (context, event, callback) {
       const recording = await client.calls(callSid).recordings.create({
         recordingChannels: 'dual',
       });
+      if (!recording.sid) throw new Error('No recording SID.');
 
+      // Add recording SID to Task Attributes
       const updatedTaskAttributes = {
         ...taskAttributes,
         recordingSid: recording.sid,
       };
 
       // Update Task Attributes
-      await client.taskrouter
+      const taskUpdated = await client.taskrouter
         .workspaces(event.workspaceSid)
         .tasks(event.taskSid)
         .update({
           attributes: JSON.stringify(updatedTaskAttributes),
         });
+
+      // Confirm Task was updated with Recording SID
+      const updatedTaskAttributes = JSON.parse(taskUpdated.attributes);
+      const recordingSid = updatedTaskAttributes.recordingSid;
+      if (!recordingSid)
+        throw new Error('Task was NOT updated with recording SID.');
     }
   } catch (err) {
     console.error('Error recording call', err);
