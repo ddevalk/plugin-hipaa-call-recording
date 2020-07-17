@@ -109,4 +109,4 @@ Once you've made this change in the `config.js` file we can now deploy the Plugi
 npm run deploy
 ```
 
-Your code should now be deployed to Twilio and can be accessed at at [flex.twilio.com](https://flex.twilio.com)
+Your code should now be deployed to Twilio and can be accessed at [flex.twilio.com](https://flex.twilio.com)
