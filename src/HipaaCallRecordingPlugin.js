@@ -18,13 +18,10 @@ export default class HipaaCallRecordingPlugin extends FlexPlugin {
    * @param manager { import('@twilio/flex-ui').Manager }
    */
   init(flex, manager) {
+    // Send Task SID to Function after the Task is accepted.
     flex.Actions.addListener('afterAcceptTask', async payload => {
-      console.debug('****START RECORDING');
       const { task } = payload;
-      const newToken = manager.store.getState().flex.session.ssoTokenPayload
-        .token;
       const url = 'https://local-node.ngrok.io/recording-service';
-      console.debug('*** TASK INFO: ', task);
       const body = {
         workspaceSid: task.sourceObject.workspaceSid,
         taskSid: task.taskSid,
@@ -39,11 +36,14 @@ export default class HipaaCallRecordingPlugin extends FlexPlugin {
         },
       };
 
+      // Throw Error if Function doesn't respond with 200 OK.
       const response = await fetch(url, options);
-
-      console.debug('***TOKEN: ', newToken);
-
-      console.debug('***API Response', response);
+      if (response.status != 200) {
+        console.error(
+          'ERROR - Unable to connect to recording Function',
+          `Status Code: ${response.status}`
+        );
+      }
     });
   }
 }

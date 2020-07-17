@@ -11,61 +11,42 @@ exports.handler = TokenValidator(async function (context, event, callback) {
   response.appendHeader('Access-Control-Allow-Methods', 'OPTIONS POST');
   response.appendHeader('Access-Control-Allow-Headers', 'Content-Type');
 
-  console.log('anything');
-
-  // Retrieve Task Attributes
-  const task = await client.taskrouter
-    .workspaces(event.workspaceSid)
-    .tasks(event.taskSid)
-    .fetch();
-  const taskAttributes = JSON.parse(task.attributes);
-  const callSid = taskAttributes.conference.participants.customer;
-
-  // Check to see if this call is already being recorded
-  const isRecording = await client.recordings.list({
-    callSid: callSid,
-    limit: 20,
-  });
-
-  console.log(isRecording);
-
-  // const recording = await client.calls(callSid).recordings.create({
-  //   recordingChannels: 'dual',
-  // });
-
-  // const updatedTaskAttributes = {
-  //   ...taskAttributes,
-  //   recordingSid: recording.sid,
-  // };
-
-  // await client.taskrouter
-  //   .workspaces(event.workspaceSid)
-  //   .tasks(event.taskSid)
-  //   .update({
-  //     attributes: JSON.stringify(updatedTaskAttributes),
-  //   });
-
-  if (isRecording.length === 0) {
-    console.debug('*** NO RECORDING DETECTED');
-    console.debug('*** START RECORDING');
-
-    // Record caller/called line
-    const recording = await client.calls(callSid).recordings.create({
-      recordingChannels: 'dual',
-    });
-
-    const updatedTaskAttributes = {
-      ...taskAttributes,
-      recordingSid: recording.sid,
-    };
-
-    // Update Task Attributes
-    await client.taskrouter
+  try {
+    // Retrieve Task Attributes
+    const task = await client.taskrouter
       .workspaces(event.workspaceSid)
       .tasks(event.taskSid)
-      .update({
-        attributes: JSON.stringify(updatedTaskAttributes),
+      .fetch();
+    const taskAttributes = JSON.parse(task.attributes);
+    const callSid = taskAttributes.conference.participants.customer;
+
+    // Check to see if this call is already being recorded
+    const isRecording = await client.recordings.list({
+      callSid: callSid,
+      limit: 20,
+    });
+
+    if (isRecording.length === 0) {
+      // Record caller/called line
+      const recording = await client.calls(callSid).recordings.create({
+        recordingChannels: 'dual',
       });
+
+      const updatedTaskAttributes = {
+        ...taskAttributes,
+        recordingSid: recording.sid,
+      };
+
+      // Update Task Attributes
+      await client.taskrouter
+        .workspaces(event.workspaceSid)
+        .tasks(event.taskSid)
+        .update({
+          attributes: JSON.stringify(updatedTaskAttributes),
+        });
+    }
+  } catch (err) {
+    console.error('Error recording call', err);
   }
 
   callback(null, response);
