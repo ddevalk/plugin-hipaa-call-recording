@@ -1,4 +1,4 @@
-# Flex Plugin - HIPAA Compliant Call Recording<br/> Dual Channel Call Recording <br/> Securly Download Recordings
+# Flex Plugin - HIPAA Compliant Call Recording
 
 ## Prerequisites
 
@@ -9,9 +9,11 @@ To deploy this plugin, you will need:
 
 ## Details
 
-This Flex Plugin provides the following functionaligy:
+This Flex Plugin provides the following functionality:
 
-- a simple way to securly download and store call recordings on your own
+- A simple way to securly download and store call recordings on your own server/service.
+- Dual channel call recording.
+- Prevents call recording URL from being exposed in Flex Insights.
 
 ## Setup
 
