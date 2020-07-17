@@ -23,13 +23,21 @@ When a Flex agent accepts a call, the Task SID and Workspace SID associated with
 
 ## Setup
 
+#### Important note about using the Twilio CLI
+
+When using the Twilio CLI, make sure you are working from the correct profile for your project. You can see a list of your Twilio profiles by running `twilio profiles:list` from the terminal/commandline. If you have multiple profiles you can select the necessary one for working on your project by running `twilio profiles:use name-of-profile`
+
+#### Turn Flex recording OFF!
+
+![Recording Off](https://github.com/twilio-professional-services/plugin-hipaa-call-recording/blob/media/recordingOff.gif?raw=true)
+
 ### Prerequisite Function
 
-There is a single function located in the `functions` directory that you are expected to implement in the [Twilio Functions Runtime](https://www.twilio.com/docs/runtime), or to replicate in your own backend application.
+There is a single function located in the `TwilioServerless/functions` directory that you are expected to implement in the [Twilio Functions Runtime](https://www.twilio.com/docs/runtime), or to replicate in your own backend application.
 
-##### Required Env Variables in your Function
+#### Required Env Variables in your Function
 
-The provided functions in their current state are looking for your TaskRouter Workspace Sid in the `TWILIO_WORKSPACE_SID` variable and your workflowSid in `TWILIO_WORKFLOW_SID`. Please ensure that these are set in your Twilio Function configuration.
+The provided Function in it's current state is looking for the `ACCOUNT_SID` and your `AUTH_TOKEN` variables. Please ensure that these are set in your Twilio Function configuration.
 
 From the repo root directory, change into functions and rename `.env.sample`.
 
@@ -41,14 +49,63 @@ Follow the instructions on the file and set your Flex project configuration valu
 
 ### Develop Locally
 
+This Flex Plugin and Function can be run locally for testing and additional development. From your terminal make sure you are in the root directory of the plugin and then follow these steps:
+
+1. Install all dependencies for this project:
+
+   ```
+   npm install
+   ```
+
+   When the above command finishes, run the following command.
+
+   ```
+   npm install TwilioServerless
+   ```
+
+2. Start the Flex Plugin by running the following command. This will open a new browser tab running Flex:
+
+   ```
+   npm start
+   ```
+
+3. Start the Twilio Function by running the following command:
+
+   ```
+   twilio serverless:start --cwd="TwilioServerless"
+   ```
+
 ### Deploy to Twilio
 
-twilio serverless:deploy --cwd="TwilioServerless"
+1. First you should deploy your Function to Twilio. Run the following command from the root of the plugin:
+   ```
+   twilio serverless:deploy --cwd="TwilioServerless"
+   ```
 
-### Prerequisites
-
-### Configuration
-
-### Deploy Function
+The result will look something like this:
 
 ![Function Deployment](https://github.com/twilio-professional-services/plugin-hipaa-call-recording/blob/media/deploy%20Function.png?raw=true)
+
+Note in the image above the **Domain** name. Copy that domain name and open the `config.js` file in your code in the `/src` directory. If you haven't changed them, the contents of the `config.js` file should look like this:
+
+    ```
+    export default {
+      runtimeDomain: 'http://localhost:3000',
+    };
+    ```
+
+Change the `config.js` file to use the Domain you just copied from deploying your Function. In the example we are using in this documentation, the `config.js` file would be changed to the following:
+
+    ```
+    export default {
+      runtimeDomain: 'http://twilioserverless-6038-dev.twil.io',
+    };
+    ```
+
+Once you've made this change in the `config.js` file we can now deploy the Plugin code up to Twilio. Run the following command to deploy your Plugin to Twilio:
+
+```
+npm run deploy
+```
+
+asfsfsadf
