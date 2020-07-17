@@ -75,6 +75,8 @@ This Flex Plugin and Function can be run locally for testing and additional deve
    twilio serverless:start --cwd="TwilioServerless"
    ```
 
+You now have a local development running. You will be able to interact with your local instance of Flex by navigating your browser to https://localhost:3000.
+
 ### Deploy to Twilio
 
 1. First you should deploy your Function to Twilio. Run the following command from the root of the plugin:
