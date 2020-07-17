@@ -1,8 +1,9 @@
 import React from 'react';
 import { FlexPlugin } from 'flex-plugin';
+import Axios from 'axios';
 
 const PLUGIN_NAME = 'HipaaCallRecordingPlugin';
-const SERVERLESS_FUNCTION_DOMAIN = 'default-4549-dev.twil.io';
+const SERVERLESS_FUNCTION_DOMAIN = 'twilioserverless-6038-dev.twil.io';
 
 export default class HipaaCallRecordingPlugin extends FlexPlugin {
   constructor() {
@@ -17,60 +18,32 @@ export default class HipaaCallRecordingPlugin extends FlexPlugin {
    * @param manager { import('@twilio/flex-ui').Manager }
    */
   init(flex, manager) {
-    flex.Actions.addListener('afterAcceptTask', payload => {
-      const waitTimeMs = 100;
-      const maxWaitTimeMs = 5000;
+    flex.Actions.addListener('afterAcceptTask', async payload => {
+      console.debug('****START RECORDING');
+      const { task } = payload;
+      const newToken = manager.store.getState().flex.session.ssoTokenPayload
+        .token;
+      const url = 'https://local-node.ngrok.io/recording-service';
+      console.debug('*** TASK INFO: ', task);
+      const body = {
+        workspaceSid: task.sourceObject.workspaceSid,
+        taskSid: task.taskSid,
+        Token: manager.store.getState().flex.session.ssoTokenPayload.token,
+      };
 
-      /**
-       * Setting an interval function because the conference setup
-       * happens a few miliseconds after 'afterAcceptTask'
-       */
-      const waitForConferenceInterval = setInterval(() => {
-        const { task } = payload;
-        const { conference } = task;
-        if (conference === undefined || conference.participants.length < 2) {
-          return;
-        }
-        clearInterval(waitForConferenceInterval);
-        // Execute your conference logic here
-        console.debug('*** Conference established:', conference);
-        console.debug('***** Task Details: ', task);
+      const options = {
+        method: 'POST',
+        body: new URLSearchParams(body),
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
+        },
+      };
 
-        /**
-         * Iterate over array of participants to retrieve
-         * the correct participant call SID and pass it to
-         * a Twilio Function using Fetch.
-         */
-        conference.participants.map(participant => {
-          if (participant.isMyself === true) {
-            const body = {
-              Token: manager.store.getState().flex.session.ssoTokenPayload
-                .token,
-              callSid: participant.callSid,
-              workspaceSid: task.sourceObject.workspaceSid,
-              taskSid: task.taskSid,
-            };
+      const response = await fetch(url, options);
 
-            const options = {
-              method: 'POST',
-              body: new URLSearchParams(body),
-              headers: {
-                'Content-Type':
-                  'application/x-www-form-urlencoded;charset=UTF-8',
-              },
-            };
+      console.debug('***TOKEN: ', newToken);
 
-            return fetch(
-              `https://${SERVERLESS_FUNCTION_DOMAIN}/recording-service`,
-              options
-            );
-          }
-          return false;
-        });
-      }, waitTimeMs);
-      setTimeout(() => {
-        clearInterval(waitForConferenceInterval);
-      }, maxWaitTimeMs);
+      console.debug('***API Response', response);
     });
   }
 }
