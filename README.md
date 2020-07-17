@@ -78,6 +78,7 @@ This Flex Plugin and Function can be run locally for testing and additional deve
 ### Deploy to Twilio
 
 1. First you should deploy your Function to Twilio. Run the following command from the root of the plugin:
+
    ```
    twilio serverless:deploy --cwd="TwilioServerless"
    ```
@@ -88,19 +89,19 @@ The result will look something like this:
 
 Note in the image above the **Domain** name. Copy that domain name and open the `config.js` file in your code in the `/src` directory. If you haven't changed them, the contents of the `config.js` file should look like this:
 
-    ```
-    export default {
-      runtimeDomain: 'http://localhost:3000',
-    };
-    ```
+```
+export default {
+  runtimeDomain: 'http://localhost:3000',
+};
+```
 
 Change the `config.js` file to use the Domain you just copied from deploying your Function. In the example we are using in this documentation, the `config.js` file would be changed to the following:
 
-    ```
-    export default {
-      runtimeDomain: 'http://twilioserverless-6038-dev.twil.io',
-    };
-    ```
+```
+export default {
+  runtimeDomain: 'http://twilioserverless-6038-dev.twil.io',
+};
+```
 
 Once you've made this change in the `config.js` file we can now deploy the Plugin code up to Twilio. Run the following command to deploy your Plugin to Twilio:
 
@@ -108,4 +109,4 @@ Once you've made this change in the `config.js` file we can now deploy the Plugi
 npm run deploy
 ```
 
-asfsfsadf
+Your code should now be deployed to Twilio and can be accessed at at [flex.twilio.com](https://flex.twilio.com)
