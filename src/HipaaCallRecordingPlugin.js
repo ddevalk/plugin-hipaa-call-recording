@@ -18,10 +18,10 @@ export default class HipaaCallRecordingPlugin extends FlexPlugin {
    * @param manager { import('@twilio/flex-ui').Manager }
    */
   init(flex, manager) {
-    // Send Task SID to Function after the Task is accepted.
+    // Send Task SID to Function after the Task is accepted by worker.
     flex.Actions.addListener('afterAcceptTask', async payload => {
       const { task } = payload;
-      const url = `https://${runtimeDomain}/recording-service`;
+      const url = `${runtimeDomain}/recording-service`;
       const body = {
         workspaceSid: task.sourceObject.workspaceSid,
         taskSid: task.taskSid,

@@ -41,7 +41,7 @@ exports.handler = TokenValidator(async function (context, event, callback) {
       if (!recording.sid) throw new Error('No recording SID.');
 
       // Add recording SID to Task Attributes
-      const updatedTaskAttributes = {
+      let updatedTaskAttributes = {
         ...taskAttributes,
         recordingSid: recording.sid,
       };
@@ -55,7 +55,7 @@ exports.handler = TokenValidator(async function (context, event, callback) {
         });
 
       // Confirm Task was updated with Recording SID
-      const updatedTaskAttributes = JSON.parse(taskUpdated.attributes);
+      updatedTaskAttributes = JSON.parse(taskUpdated.attributes);
       const recordingSid = updatedTaskAttributes.recordingSid;
       if (!recordingSid)
         throw new Error('Task was NOT updated with recording SID.');
