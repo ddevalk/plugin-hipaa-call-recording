@@ -22,7 +22,7 @@ exports.handler = TokenValidator(async function (context, event, callback) {
     const taskAttributes = JSON.parse(task.attributes);
 
     // Retrieve customer call SID
-    const callSid = taskAttributes.conference?.participants.customer;
+    const callSid = taskAttributes.conference.participants.customer;
 
     // Throw error if no call SID
     if (!callSid) throw new Error('Unable to retrieve call SID.');

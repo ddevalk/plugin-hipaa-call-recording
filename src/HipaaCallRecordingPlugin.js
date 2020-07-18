@@ -9,7 +9,6 @@ export default class HipaaCallRecordingPlugin extends FlexPlugin {
   constructor() {
     super(PLUGIN_NAME);
   }
-
   /**
    * This code is run when your plugin is being started
    * Use this to modify any UI components or attach to the actions framework
@@ -21,8 +20,11 @@ export default class HipaaCallRecordingPlugin extends FlexPlugin {
     // Send Task SID to Function after the Task is accepted by worker.
     flex.Actions.addListener('afterAcceptTask', async payload => {
       const { task } = payload;
+
       const url = `${runtimeDomain}/recording-service`;
+
       const body = {
+        reservationSid: payload.sid,
         workspaceSid: task.sourceObject.workspaceSid,
         taskSid: task.taskSid,
         Token: manager.store.getState().flex.session.ssoTokenPayload.token,

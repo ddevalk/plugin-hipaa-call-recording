@@ -60,10 +60,11 @@ This Flex Plugin and Function can be run locally for testing and additional deve
    When the above command finishes, run the following command.
 
    ```
-   npm install TwilioServerless
+   cd TwilioServerless
+   npm install
    ```
 
-2. Start the Flex Plugin by running the following command. This will open a new browser tab running Flex:
+2. Start the Flex Plugin by running the following command from the root directory of your plugin. This will open a new browser tab running Flex:
 
    ```
    npm start
