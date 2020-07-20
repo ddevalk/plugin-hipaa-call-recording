@@ -40,7 +40,6 @@ export default class HipaaCallRecordingPlugin extends FlexPlugin {
               Token: manager.store.getState().flex.session.ssoTokenPayload
                 .token,
             };
-            console.debug('***HTTP BODY: ', body);
 
             const options = {
               method: 'POST',
@@ -50,15 +49,11 @@ export default class HipaaCallRecordingPlugin extends FlexPlugin {
                   'application/x-www-form-urlencoded;charset=UTF-8',
               },
             };
-
-            // Throw Error if Function doesn't respond with 200 OK.
-            const response = fetch(url, options);
-            // if (response.status != 200) {
-            //   console.error(
-            //     'ERROR - Unable to connect to recording Function',
-            //     `Status Code: ${response.status}`
-            //   );
-            // }
+            try {
+              fetch(url, options);
+            } catch (err) {
+              console.error('Error connecting to function: ', err);
+            }
           }
         });
       }, waitTimeMs);
