@@ -1,3 +1,3 @@
 export default {
-  runtimeDomain: 'https://twilioserverless-6038-dev.twil.io',
+  runtimeDomain: 'http://localhost:3000',
 };
