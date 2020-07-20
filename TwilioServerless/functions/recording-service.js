@@ -11,7 +11,6 @@ exports.handler = TokenValidator(async function (context, event, callback) {
   response.appendHeader('Access-Control-Allow-Methods', 'OPTIONS POST');
   response.appendHeader('Access-Control-Allow-Headers', 'Content-Type');
   response.appendHeader('Content-type', 'application/json');
-  response.setStatusCode(200);
 
   try {
     // Retrieve Task Attributes
@@ -58,10 +57,12 @@ exports.handler = TokenValidator(async function (context, event, callback) {
       const recordingSid = updatedTaskAttributes.recordingSid;
       if (!recordingSid)
         throw new Error('Task was NOT updated with recording SID.');
+
+      callback(null, response);
     }
   } catch (err) {
     console.error('Error recording call', err);
+    response.setStatusCode(500);
+    callback(null, response);
   }
-
-  callback(null, response);
 });
