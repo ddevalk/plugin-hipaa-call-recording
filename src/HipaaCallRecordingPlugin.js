@@ -19,33 +19,51 @@ export default class HipaaCallRecordingPlugin extends FlexPlugin {
   init(flex, manager) {
     // Send Task SID to Function after the Task is accepted by worker.
     flex.Actions.addListener('afterAcceptTask', async payload => {
-      const { task } = payload;
+      const waitTimeMs = 500;
+      const maxWaitTimeMs = 15000;
+      const waitForConferenceInterval = setInterval(async () => {
+        const { task } = payload;
+        const { conference } = task;
+        if (conference === undefined || conference.participants.length <= 1) {
+          return;
+        }
+        clearInterval(waitForConferenceInterval);
+        // Execute your conference logic here
+        const url = `${runtimeDomain}/recording-service`;
 
-      const url = `${runtimeDomain}/recording-service`;
+        conference.participants.forEach(participant => {
+          if (participant.source.participant_type == 'customer') {
+            const body = {
+              workspaceSid: task.sourceObject.workspaceSid,
+              taskSid: task.taskSid,
+              callSid: participant.callSid,
+              Token: manager.store.getState().flex.session.ssoTokenPayload
+                .token,
+            };
 
-      const body = {
-        reservationSid: payload.sid,
-        workspaceSid: task.sourceObject.workspaceSid,
-        taskSid: task.taskSid,
-        Token: manager.store.getState().flex.session.ssoTokenPayload.token,
-      };
+            const options = {
+              method: 'POST',
+              body: new URLSearchParams(body),
+              headers: {
+                'Content-Type':
+                  'application/x-www-form-urlencoded;charset=UTF-8',
+              },
+            };
 
-      const options = {
-        method: 'POST',
-        body: new URLSearchParams(body),
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
-        },
-      };
-
-      // Throw Error if Function doesn't respond with 200 OK.
-      const response = await fetch(url, options);
-      if (response.status != 200) {
-        console.error(
-          'ERROR - Unable to connect to recording Function',
-          `Status Code: ${response.status}`
-        );
-      }
+            // Throw Error if Function doesn't respond with 200 OK.
+            const response = fetch(url, options);
+            if (response.status != 200) {
+              console.error(
+                'ERROR - Unable to connect to recording Function',
+                `Status Code: ${response.status}`
+              );
+            }
+          }
+        });
+      }, waitTimeMs);
+      setTimeout(() => {
+        clearInterval(waitForConferenceInterval);
+      }, maxWaitTimeMs);
     });
   }
 }

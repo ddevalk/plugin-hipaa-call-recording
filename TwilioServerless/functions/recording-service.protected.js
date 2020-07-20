@@ -21,21 +21,18 @@ exports.handler = TokenValidator(async function (context, event, callback) {
     // Convert Task Attributes to JSON
     const taskAttributes = JSON.parse(task.attributes);
 
-    // Retrieve customer call SID
-    const callSid = taskAttributes.conference.participants.customer;
-
     // Throw error if no call SID
-    if (!callSid) throw new Error('Unable to retrieve call SID.');
+    if (!event.callSid) throw new Error('Unable to retrieve call SID.');
 
     // Check to see if this call is already being recorded
     const isRecording = await client.recordings.list({
-      callSid: callSid,
+      callSid: event.callSid,
       limit: 20,
     });
 
     if (isRecording.length === 0) {
       // Record caller/called line
-      const recording = await client.calls(callSid).recordings.create({
+      const recording = await client.calls(event.callSid).recordings.create({
         recordingChannels: 'dual',
       });
       if (!recording.sid) throw new Error('No recording SID.');
