@@ -13,15 +13,6 @@ exports.handler = TokenValidator(async function (context, event, callback) {
   response.appendHeader('Content-type', 'application/json');
 
   try {
-    // Retrieve Task Attributes
-    const task = await client.taskrouter
-      .workspaces(event.workspaceSid)
-      .tasks(event.taskSid)
-      .fetch();
-
-    // Convert Task Attributes to JSON
-    const taskAttributes = JSON.parse(task.attributes);
-
     // Throw error if no call SID
     if (!event.callSid) throw new Error('Unable to retrieve call SID.');
 
@@ -34,30 +25,12 @@ exports.handler = TokenValidator(async function (context, event, callback) {
     if (isRecording.length === 0) {
       // Record caller/called line
       const recording = await client.calls(event.callSid).recordings.create({
+        recordingStatusCallback: `https://${context.DOMAIN_NAME}/recording-complete?taskSid=${event.taskSid}`,
+        recordingStatusCallbackEvent: ['completed'],
         recordingChannels: 'dual',
       });
-      if (!recording.sid) throw new Error('No recording SID.');
 
-      // Add recording SID to Task Attributes
-      let updatedTaskAttributes = {
-        ...taskAttributes,
-        recordingSid: recording.sid,
-      };
-
-      // Update Task Attributes
-      const taskUpdated = await client.taskrouter
-        .workspaces(event.workspaceSid)
-        .tasks(event.taskSid)
-        .update({
-          attributes: JSON.stringify(updatedTaskAttributes),
-        });
-
-      // Confirm Task was updated with Recording SID
-      updatedTaskAttributes = JSON.parse(taskUpdated.attributes);
-      const recordingSid = updatedTaskAttributes.recordingSid;
-      if (!recordingSid)
-        throw new Error('Task was NOT updated with recording SID.');
-
+      response.setStatusCode(200);
       callback(null, response);
     }
   } catch (err) {

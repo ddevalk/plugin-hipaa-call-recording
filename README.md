@@ -37,7 +37,7 @@ There is a single function located in the `TwilioServerless/functions` directory
 
 #### Required Env Variables in your Function
 
-The provided Function in it's current state is looking for the `ACCOUNT_SID` and your `AUTH_TOKEN` variables. Please ensure that these are set in your Twilio Function configuration.
+The provided Function in it's current state is looking for the `ACCOUNT_SID` and your `AUTH_TOKEN` variables of your Twilio Account. You will also need to provide the Workspace SID at `WORKSPACE_SID` for the TakRouter Workspace associated with your Flex project. Workspace SIDs can be found here: https://www.twilio.com/console/taskrouter/dashboard. Please ensure that these are set in your Twilio Function configuration `.env` file.
 
 From the repo root directory, change into functions and rename `.env.sample`.
 

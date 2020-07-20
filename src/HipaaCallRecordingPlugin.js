@@ -34,8 +34,6 @@ export default class HipaaCallRecordingPlugin extends FlexPlugin {
         conference.participants.forEach(participant => {
           if (participant.source.participant_type == 'customer') {
             const body = {
-              workspaceSid: task.sourceObject.workspaceSid,
-              taskSid: task.taskSid,
               callSid: participant.callSid,
               Token: manager.store.getState().flex.session.ssoTokenPayload
                 .token,
