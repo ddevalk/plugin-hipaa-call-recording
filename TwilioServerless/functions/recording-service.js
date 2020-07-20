@@ -10,6 +10,8 @@ exports.handler = TokenValidator(async function (context, event, callback) {
   response.appendHeader('Access-Control-Allow-Origin', '*');
   response.appendHeader('Access-Control-Allow-Methods', 'OPTIONS POST');
   response.appendHeader('Access-Control-Allow-Headers', 'Content-Type');
+  response.appendHeader('Content-type', 'application/json');
+  response.setStatusCode(200);
 
   try {
     // Retrieve Task Attributes
