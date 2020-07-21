@@ -1,5 +1,7 @@
 # Flex Plugin - HIPAA Compliant Call Recording
 
+**IMPORTANT!** This plugin is property of Calabrio and is not to be shared with other customers.
+
 ## Prerequisites
 
 To deploy this plugin, you will need:
