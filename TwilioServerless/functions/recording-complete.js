@@ -3,10 +3,6 @@ exports.handler = async (context, event, callback) => {
   const client = context.getTwilioClient();
   const response = new Twilio.Response();
 
-  console.log('TASK SID: ', event.taskSid);
-  console.log('WORKSPACE SID: ', context.WORKSPACE_SID);
-  console.log('RECORDING SID: ', event.RecordingSid);
-
   try {
     // Retrieve Task Attributes
     const task = await client.taskrouter
