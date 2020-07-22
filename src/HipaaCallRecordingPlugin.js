@@ -35,6 +35,7 @@ export default class HipaaCallRecordingPlugin extends FlexPlugin {
           if (participant.source.participant_type == 'customer') {
             const body = {
               callSid: participant.callSid,
+              taskSid: participant.taskSid,
               Token: manager.store.getState().flex.session.ssoTokenPayload
                 .token,
             };
